@@ -146,69 +146,90 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--nav-h) var(--gutter) 0;
+  padding: var(--nav-h) var(--gutter) var(--gutter);
   overflow: hidden;
+  background: rgba(0, 0, 0, 0.96);
 }
 
-#hero-canvas {
+/* Spotlight SVG (aceternity style) */
+.spotlight {
   position: absolute;
-  inset: 0;
+  z-index: 1;
+  top: -10%;
+  left: -10%;
+  width: 138%;
+  height: 169%;
+  pointer-events: none;
+  opacity: 0;
+  animation: spotlight 2.5s ease forwards 0.3s;
+}
+
+@keyframes spotlight {
+  0%   { opacity: 0; transform: translate(-10%, -10%) scale(0.6); }
+  100% { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+
+/* Card container */
+.hero-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--max-w);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  min-height: 500px;
+}
+
+/* Left: text content */
+.hero-left {
+  flex: 1;
+  padding: clamp(40px, 6vw, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Right: Spline scene */
+.hero-right {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+
+#spline-canvas {
   width: 100%;
   height: 100%;
   display: block;
-  pointer-events: none;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 768px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero-frame {
-  border: 1px solid #27272a;
-  padding: 8px;
-  width: 100%;
-}
-
-.hero-frame-inner {
-  border: 1px solid #27272a;
-  padding: clamp(40px, 6vw, 64px) clamp(24px, 4vw, 48px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  text-align: center;
 }
 
 .hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(40px, 7vw, 96px);
+  font-size: clamp(36px, 5vw, 60px);
   font-weight: 800;
-  line-height: 1.0;
+  line-height: 1.05;
   letter-spacing: -0.03em;
-  max-width: none;
-  text-align: center;
+  background: linear-gradient(to bottom, #f5f5f5 0%, #a0a0a0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .hero-sub {
-  font-size: clamp(13px, 1.4vw, 16px);
+  font-size: clamp(13px, 1.3vw, 15px);
   color: rgba(255, 255, 255, 0.6);
   line-height: 1.7;
-  max-width: 44ch;
-  text-align: center;
+  max-width: 38ch;
 }
 
 /* ─── Availability dot ────────────────────────────────────────── */
 .availability {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   font-size: 12px;
   color: #22c55e;
@@ -689,7 +710,13 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  .hero-scroll { display: none; }
+  /* Hero: stack vertically on mobile */
+  .hero-card {
+    flex-direction: column;
+  }
+  .hero-right {
+    min-height: 300px;
+  }
 
   .service-card {
     flex-direction: column;
