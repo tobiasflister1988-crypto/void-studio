@@ -1,2 +1,5 @@
 .DS_Store
 .agents/.DS_Store
+node_modules/
+.next/
+.env*
