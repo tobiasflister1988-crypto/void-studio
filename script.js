@@ -73,7 +73,7 @@
 
     function animate() {
       requestAnimationFrame(animate);
-      uniforms.time.value += 0.18;
+      uniforms.time.value += 0.05;
       renderer.render(scene, camera);
     }
 
