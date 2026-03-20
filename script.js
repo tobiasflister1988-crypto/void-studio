@@ -9,7 +9,15 @@ import { Application } from 'https://unpkg.com/@splinetool/runtime/build/runtime
 
   if (splineCanvas) {
     const app = new Application(splineCanvas);
-    app.load('https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode');
+    app.load('https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode').then(() => {
+      // Remove Spline scene background
+      if (app._renderer) {
+        app._renderer.setClearColor(0x000000, 0);
+      }
+      if (app._scene) {
+        app._scene.background = null;
+      }
+    });
   }
 
 
