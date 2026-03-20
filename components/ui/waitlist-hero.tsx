@@ -6,6 +6,15 @@ export const WaitlistHero = () => {
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle")
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMouse({
+      x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
+      y: ((e.clientY - rect.top) / rect.height - 0.5) * 2,
+    })
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -113,6 +122,7 @@ export const WaitlistHero = () => {
       <div
         className="relative w-full h-screen overflow-hidden shadow-2xl"
         style={{ backgroundColor: c.baseBg }}
+        onMouseMove={handleMouseMove}
       >
         {/* Spinning ring background */}
         <div
@@ -123,17 +133,31 @@ export const WaitlistHero = () => {
             transformOrigin: "center bottom",
           }}
         >
-          <div className="absolute inset-0 animate-spin-slow">
+          {/* Back ring — subtle parallax */}
+          <div
+            className="absolute inset-0 animate-spin-slow"
+            style={{ transform: `rotate(0deg) translate(${mouse.x * 12}px, ${mouse.y * 12}px)`, transition: "transform 0.6s ease-out" }}
+          >
             <div className="absolute top-1/2 left-1/2" style={{ width: "2000px", height: "2000px", transform: "translate(-50%, -50%) rotate(279.05deg)", zIndex: 0 }}>
               <img src="https://framerusercontent.com/images/oqZEqzDEgSLygmUDuZAYNh2XQ9U.png?scale-down-to=2048" alt="" className="w-full h-full object-cover opacity-50" />
             </div>
           </div>
-          <div className="absolute inset-0 animate-spin-slow-reverse">
+
+          {/* Middle ring — medium parallax */}
+          <div
+            className="absolute inset-0 animate-spin-slow-reverse"
+            style={{ transform: `rotate(0deg) translate(${mouse.x * 28}px, ${mouse.y * 28}px)`, transition: "transform 0.4s ease-out" }}
+          >
             <div className="absolute top-1/2 left-1/2" style={{ width: "1000px", height: "1000px", transform: "translate(-50%, -50%) rotate(304.42deg)", zIndex: 1 }}>
               <img src="https://framerusercontent.com/images/UbucGYsHDAUHfaGZNjwyCzViw8.png?scale-down-to=1024" alt="" className="w-full h-full object-cover opacity-60" />
             </div>
           </div>
-          <div className="absolute inset-0 animate-spin-slow">
+
+          {/* Front ring — strongest parallax */}
+          <div
+            className="absolute inset-0 animate-spin-slow"
+            style={{ transform: `rotate(0deg) translate(${mouse.x * 48}px, ${mouse.y * 48}px)`, transition: "transform 0.25s ease-out" }}
+          >
             <div className="absolute top-1/2 left-1/2" style={{ width: "800px", height: "800px", transform: "translate(-50%, -50%) rotate(48.33deg)", zIndex: 2 }}>
               <img src="https://framerusercontent.com/images/Ans5PAxtJfg3CwxlrPMSshx2Pqc.png" alt="" className="w-full h-full object-cover opacity-80" />
             </div>
