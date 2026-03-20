@@ -1,90 +1,83 @@
 /* ─── Void Studio — Interactions ──────────────────────────────── */
-import { Application } from 'https://unpkg.com/@splinetool/runtime/build/runtime.js';
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
 (function () {
   'use strict';
 
-  /* ── Spline 3D Scene ─────────────────────────────────────────── */
-  const splineCanvas = document.getElementById('spline-canvas');
+  /* ── Shader Animation ─────────────────────────────────────────── */
+  const container = document.getElementById('shader-container');
 
-  if (splineCanvas) {
-    const app = new Application(splineCanvas);
-    app.load('https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode').then(() => {
-      // Remove Spline scene background
-      if (app._renderer) {
-        app._renderer.setClearColor(0x000000, 0);
+  if (container) {
+    const vertexShader = `
+      void main() {
+        gl_Position = vec4( position, 1.0 );
       }
-      if (app._scene) {
-        app._scene.background = null;
-      }
-    });
-  }
+    `;
 
+    const fragmentShader = `
+      #define TWO_PI 6.2831853072
+      #define PI 3.14159265359
 
-  /* ── Gooey Text Morphing ──────────────────────────────────────── */
-  const gooeyTexts = ['Logos', 'Websites', 'Brands', 'Identity'];
-  const morphTime = 1;
-  const cooldownTime = 0.25;
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
 
-  const text1El = document.getElementById('gooey-text1');
-  const text2El = document.getElementById('gooey-text2');
+      void main(void) {
+        vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+        float t = time * 0.05;
+        float lineWidth = 0.002;
 
-  if (text1El && text2El) {
-    let textIndex = gooeyTexts.length - 1;
-    let time = new Date();
-    let morph = 0;
-    let cooldown = cooldownTime;
-
-    text1El.textContent = gooeyTexts[textIndex % gooeyTexts.length];
-    text2El.textContent = gooeyTexts[(textIndex + 1) % gooeyTexts.length];
-
-    function setMorph(fraction) {
-      text2El.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-      text2El.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
-      fraction = 1 - fraction;
-      text1El.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-      text1El.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
-    }
-
-    function doCooldown() {
-      morph = 0;
-      text2El.style.filter = '';
-      text2El.style.opacity = '100%';
-      text1El.style.filter = '';
-      text1El.style.opacity = '0%';
-    }
-
-    function doMorph() {
-      morph -= cooldown;
-      cooldown = 0;
-      let fraction = morph / morphTime;
-      if (fraction > 1) {
-        cooldown = cooldownTime;
-        fraction = 1;
-      }
-      setMorph(fraction);
-    }
-
-    function animateGooey() {
-      requestAnimationFrame(animateGooey);
-      const newTime = new Date();
-      const shouldIncrementIndex = cooldown > 0;
-      const dt = (newTime.getTime() - time.getTime()) / 1000;
-      time = newTime;
-      cooldown -= dt;
-      if (cooldown <= 0) {
-        if (shouldIncrementIndex) {
-          textIndex = (textIndex + 1) % gooeyTexts.length;
-          text1El.textContent = gooeyTexts[textIndex % gooeyTexts.length];
-          text2El.textContent = gooeyTexts[(textIndex + 1) % gooeyTexts.length];
+        vec3 color = vec3(0.0);
+        for(int j = 0; j < 3; j++){
+          for(int i = 0; i < 5; i++){
+            color[j] += lineWidth * float(i * i) / abs(fract(t - 0.01 * float(j) + float(i) * 0.01) * 5.0 - length(uv) + mod(uv.x + uv.y, 0.2));
+          }
         }
-        doMorph();
-      } else {
-        doCooldown();
+
+        gl_FragColor = vec4(color[0], color[1], color[2], 1.0);
       }
+    `;
+
+    const camera = new THREE.Camera();
+    camera.position.z = 1;
+
+    const scene = new THREE.Scene();
+    const geometry = new THREE.PlaneGeometry(2, 2);
+
+    const uniforms = {
+      time: { value: 1.0 },
+      resolution: { value: new THREE.Vector2() },
+    };
+
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader,
+      fragmentShader,
+    });
+
+    scene.add(new THREE.Mesh(geometry, material));
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    function onResize() {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      renderer.setSize(w, h);
+      uniforms.resolution.value.set(renderer.domElement.width, renderer.domElement.height);
     }
 
-    animateGooey();
+    onResize();
+    window.addEventListener('resize', onResize, { passive: true });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      uniforms.time.value += 0.05;
+      renderer.render(scene, camera);
+    }
+
+    animate();
   }
 
 
