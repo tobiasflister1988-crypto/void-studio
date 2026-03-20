@@ -52,7 +52,25 @@
         <!-- Left: Text -->
         <div class="hero-left">
           <h1 class="hero-headline reveal">
-            We build brands<br />that define<br />categories.
+            We build<br />
+            <span class="gooey-wrapper" aria-label="Logos, Websites, Branding, Identity">
+              <svg class="gooey-filter-svg" aria-hidden="true">
+                <defs>
+                  <filter id="gooey-threshold">
+                    <feColorMatrix in="SourceGraphic" type="matrix"
+                      values="1 0 0 0 0
+                              0 1 0 0 0
+                              0 0 1 0 0
+                              0 0 0 255 -140"/>
+                  </filter>
+                </defs>
+              </svg>
+              <span class="gooey-morph" style="filter: url(#gooey-threshold)">
+                <span id="gooey-text1" class="gooey-span"></span>
+                <span id="gooey-text2" class="gooey-span"></span>
+              </span>
+            </span>
+            <br />that define categories.
           </h1>
           <p class="hero-sub reveal">
             Logos. Websites. Identity. —<br />

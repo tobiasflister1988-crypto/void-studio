@@ -21,6 +21,73 @@ import { Application } from 'https://unpkg.com/@splinetool/runtime/build/runtime
   }
 
 
+  /* ── Gooey Text Morphing ──────────────────────────────────────── */
+  const gooeyTexts = ['Logos', 'Websites', 'Brands', 'Identity'];
+  const morphTime = 1;
+  const cooldownTime = 0.25;
+
+  const text1El = document.getElementById('gooey-text1');
+  const text2El = document.getElementById('gooey-text2');
+
+  if (text1El && text2El) {
+    let textIndex = gooeyTexts.length - 1;
+    let time = new Date();
+    let morph = 0;
+    let cooldown = cooldownTime;
+
+    text1El.textContent = gooeyTexts[textIndex % gooeyTexts.length];
+    text2El.textContent = gooeyTexts[(textIndex + 1) % gooeyTexts.length];
+
+    function setMorph(fraction) {
+      text2El.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+      text2El.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+      fraction = 1 - fraction;
+      text1El.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
+      text1El.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+    }
+
+    function doCooldown() {
+      morph = 0;
+      text2El.style.filter = '';
+      text2El.style.opacity = '100%';
+      text1El.style.filter = '';
+      text1El.style.opacity = '0%';
+    }
+
+    function doMorph() {
+      morph -= cooldown;
+      cooldown = 0;
+      let fraction = morph / morphTime;
+      if (fraction > 1) {
+        cooldown = cooldownTime;
+        fraction = 1;
+      }
+      setMorph(fraction);
+    }
+
+    function animateGooey() {
+      requestAnimationFrame(animateGooey);
+      const newTime = new Date();
+      const shouldIncrementIndex = cooldown > 0;
+      const dt = (newTime.getTime() - time.getTime()) / 1000;
+      time = newTime;
+      cooldown -= dt;
+      if (cooldown <= 0) {
+        if (shouldIncrementIndex) {
+          textIndex = (textIndex + 1) % gooeyTexts.length;
+          text1El.textContent = gooeyTexts[textIndex % gooeyTexts.length];
+          text2El.textContent = gooeyTexts[(textIndex + 1) % gooeyTexts.length];
+        }
+        doMorph();
+      } else {
+        doCooldown();
+      }
+    }
+
+    animateGooey();
+  }
+
+
   /* ── Nav: transparent → frosted glass on scroll ──────────────── */
   const nav = document.getElementById('nav');
 
