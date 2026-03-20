@@ -389,7 +389,7 @@ section {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -648,6 +648,7 @@ footer {
 /* Stagger children inside grids */
 .services-grid .reveal:nth-child(2) { transition-delay: 0.1s; }
 .services-grid .reveal:nth-child(3) { transition-delay: 0.2s; }
+.services-grid .reveal:nth-child(4) { transition-delay: 0.3s; }
 
 .portfolio-grid .reveal:nth-child(2) { transition-delay: 0.08s; }
 .portfolio-grid .reveal:nth-child(3) { transition-delay: 0.16s; }
