@@ -183,13 +183,13 @@ nav {
   font-weight: 800;
   line-height: 1.0;
   letter-spacing: -0.04em;
-  color: #0d2557 !important;
-  text-shadow: none;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(255,255,255,0.15);
 }
 
 .hero-sub {
   font-size: clamp(14px, 1.4vw, 17px);
-  color: rgba(13, 37, 87, 0.75) !important;
+  color: rgba(255, 255, 255, 0.65);
   line-height: 1.7;
   max-width: 44ch;
 }
