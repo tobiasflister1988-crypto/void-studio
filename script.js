@@ -1,5 +1,5 @@
 /* ─── Void Studio — Interactions ──────────────────────────────── */
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+/* THREE is loaded globally via <script> tag in index.html */
 
 (function () {
   'use strict';
