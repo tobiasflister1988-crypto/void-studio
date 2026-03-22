@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/utils"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+
+const navBtnCls = "flex items-center justify-center w-9 h-9 rounded-lg text-white/60 hover:bg-white/10 hover:text-white transition-colors"
 import type * as React from "react"
 import { DayPicker } from "react-day-picker"
 
@@ -21,14 +23,8 @@ export function Calendar({
         month_caption: "flex items-center justify-center relative h-9",
         caption_label: "text-sm font-semibold text-white",
         nav: "absolute top-0 flex w-full justify-between items-center h-9",
-        button_previous: cn(
-          "flex items-center justify-center w-9 h-9 rounded-lg text-white/60",
-          "hover:bg-white/10 hover:text-white transition-colors"
-        ),
-        button_next: cn(
-          "flex items-center justify-center w-9 h-9 rounded-lg text-white/60",
-          "hover:bg-white/10 hover:text-white transition-colors"
-        ),
+        button_previous: navBtnCls,
+        button_next: navBtnCls,
         month_grid: "w-full border-collapse mt-1",
         weekdays: "flex",
         weekday: "w-9 h-9 flex items-center justify-center text-xs font-medium text-white/30",
