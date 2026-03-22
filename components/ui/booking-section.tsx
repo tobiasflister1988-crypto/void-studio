@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils"
 
 const FORMAT_LONG: Intl.DateTimeFormatOptions = { weekday: "long", day: "numeric", month: "long" }
 const FORMAT_SHORT: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" }
@@ -79,11 +80,12 @@ export function BookingSection() {
                       key={slot}
                       onClick={() => setTime(slot)}
                       disabled={!date}
-                      className={`py-2.5 px-4 rounded-xl text-sm font-medium transition-all border
-                        ${time === slot
+                      className={cn(
+                        "py-2.5 px-4 rounded-xl text-sm font-medium transition-all border",
+                        time === slot
                           ? "bg-orange-500 border-orange-500 text-black font-semibold"
                           : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white disabled:opacity-25 disabled:cursor-not-allowed"
-                        }`}
+                      )}
                     >
                       {slot}
                     </button>
